@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday - Celebration Experience</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', 'Padauk', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .birthday-grid-bg {
+            background-color: #fff5f8;
+            background-image: 
+                linear-gradient(to right, #fbcfe8 1px, transparent 1px),
+                linear-gradient(to bottom, #fbcfe8 1px, transparent 1px);
+            background-size: 38px 38px;
+        }
+
+        @keyframes gentle-bounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-8px) scale(1.02); }
+        }
+
+        .flower-bounce {
+            animation: gentle-bounce 3.5s infinite ease-in-out;
+        }
+
+        .click-pop {
+            animation: pop-bounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes pop-bounce {
+            0% { transform: scale(1); }
+            40% { transform: scale(0.88); }
+            100% { transform: scale(1); }
+        }
+
+        .surrounding-item {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+            pointer-events: none;
+            z-index: 30;
+        }
+
+        .surrounding-item.active {
+            opacity: 1;
+            transform: translate(calc(-50% + var(--target-x)), calc(-50% + var(--target-y))) scale(1);
+            pointer-events: auto;
+        }
+
+        @keyframes float-around {
+            0%, 100% { transform: translate(calc(-50% + var(--target-x)), calc(-50% + var(--target-y))) scale(1) translateY(0px); }
+            50% { transform: translate(calc(-50% + var(--target-x)), calc(-50% + var(--target-y))) scale(1.05) translateY(-6px); }
+        }
+
+        .surrounding-item.active.floating {
+            animation: float-around 3s infinite ease-in-out;
+        }
+
+        @keyframes sparkle-fly {
+            0% { opacity: 1; transform: translate(0, 0) scale(1); }
+            100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); }
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            animation: sparkle-fly 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            z-index: 50;
+        }
+        
+        .hint-pulse {
+            animation: subtle-pulse 2s infinite ease-in-out;
+        }
+        
+        @keyframes subtle-pulse {
+            0%, 100% { opacity: 0.85; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        @keyframes cd-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .spinning-cd {
+            animation: cd-spin 3s linear infinite;
+        }
+    </style>
+</head>
+<body class="birthday-grid-bg h-screen w-screen relative flex flex-col items-center justify-center overflow-hidden touch-manipulation">
+
+    <div id="container" class="relative w-full h-full flex flex-col items-center justify-center">
+
+        <!-- Top Header Message -->
+        <div class="absolute top-8 text-center z-40 px-4 pointer-events-none">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-pink-600 tracking-wide drop-shadow-sm">
+                Happy Birthday! 🎂✨
+            </h1>
+            <p id="instructionText" class="text-xs md:text-sm text-pink-600 mt-2 hint-pulse font-semibold bg-white/80 backdrop-blur-sm px-4 py-1.5 rounded-full border border-pink-300 shadow-sm inline-block">
+                👇 မွေးနေ့လက်ဆောင်ဖွင့်ရန် ပန်းစည်းလေးကို နှိပ်ပါ! 👇
+            </p>
+        </div>
+
+        <!-- Surrounding 5 Images Wrapper -->
+        <div id="surroundingContainer" class="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
+            <!-- PNG 1 -->
+            <div class="surrounding-item" id="item-0">
+                <div onclick="handleItemClick(0, event)" class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl p-1 bg-white/95 shadow-xl border-2 border-pink-300 backdrop-blur-sm cursor-pointer transform hover:scale-110 active:scale-125 transition-transform duration-200 select-none overflow-hidden relative flex items-center justify-center">
+                    <img src="https://i.pinimg.com/1200x/e5/1b/4b/e51b4b7af148708f5e5bf174c31a50bb.jpg" alt="Item 1" class="w-full h-full object-contain rounded-xl pointer-events-none">
+                </div>
+            </div>
+            <!-- PNG 2 -->
+            <div class="surrounding-item" id="item-1">
+                <div onclick="handleItemClick(1, event)" class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl p-1 bg-white/95 shadow-xl border-2 border-pink-300 backdrop-blur-sm cursor-pointer transform hover:scale-110 active:scale-125 transition-transform duration-200 select-none overflow-hidden relative flex items-center justify-center">
+                    <img src="https://i.pinimg.com/736x/f4/c7/bf/f4c7bf6b31f275a4ba54a88f9ee7f145.jpg" alt="Item 2" class="w-full h-full object-contain rounded-xl pointer-events-none">
+                </div>
+            </div>
+            <!-- PNG 3 -->
+            <div class="surrounding-item" id="item-2">
+                <div onclick="handleItemClick(2, event)" class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl p-1 bg-white/95 shadow-xl border-2 border-pink-300 backdrop-blur-sm cursor-pointer transform hover:scale-110 active:scale-125 transition-transform duration-200 select-none overflow-hidden relative flex items-center justify-center">
+                    <img src="https://i.pinimg.com/736x/3f/1b/65/3f1b65a451fc21d1c1d62a0b379119ff.jpg" alt="Item 3" class="w-full h-full object-contain rounded-xl pointer-events-none">
+                </div>
+            </div>
+            <!-- PNG 4 -->
+            <div class="surrounding-item" id="item-3">
+                <div onclick="handleItemClick(3, event)" class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl p-1 bg-white/95 shadow-xl border-2 border-pink-300 backdrop-blur-sm cursor-pointer transform hover:scale-110 active:scale-125 transition-transform duration-200 select-none overflow-hidden relative flex items-center justify-center">
+                    <img src="https://i.pinimg.com/736x/cf/ae/a5/cfaea5fa368073c7ac772e4442232c15.jpg" alt="Item 4" class="w-full h-full object-contain rounded-xl pointer-events-none">
+                </div>
+            </div>
+            <!-- PNG 5 (Music) -->
+            <div class="surrounding-item" id="item-4">
+                <div onclick="handleItemClick(4, event)" class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl p-1 bg-white/95 shadow-xl border-2 border-pink-300 backdrop-blur-sm cursor-pointer transform hover:scale-110 active:scale-125 transition-transform duration-200 select-none overflow-hidden relative flex items-center justify-center">
+                    <img id="cdImageInner" src="https://i.pinimg.com/736x/ec/c5/b5/ecc5b5b8671bd954c16465ea3223990d.jpg" alt="Item 5" class="w-full h-full object-contain rounded-xl pointer-events-none">
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Flower Bouquet Center Image -->
+        <div class="relative cursor-pointer z-20 group" id="flowerContainer" onclick="toggleBouquet(event)">
+            <div id="glowBg" class="absolute -inset-6 bg-pink-300/40 rounded-full blur-2xl transition duration-500 group-hover:bg-pink-400/60"></div>
+            <img 
+                id="mainBouquet"
+                src="https://i.ibb.co/hFk6hxhK/ggrg.png" 
+                alt="Flower Bouquet" 
+                class="w-52 sm:w-60 md:w-64 h-auto object-contain flower-bounce transition-transform duration-300 active:scale-95 drop-shadow-2xl select-none"
+            >
+        </div>
+
+        <!-- Bottom Toggle Status Indicator -->
+        <div class="absolute bottom-6 z-40 text-center pointer-events-none">
+            <div class="bg-white/90 backdrop-blur-md px-5 py-2 rounded-full border border-pink-300 shadow-md text-pink-800 text-xs md:text-sm font-semibold flex items-center gap-2">
+                <i id="statusHeart" class="fa-solid fa-cake-candles text-pink-500 text-sm"></i>
+                <span id="statusText">State: Wishing you a magical day! 🎉</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 1: PNG 1 (Video Modal) -->
+    <div id="noteModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
+        <div class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden border-2 border-pink-200 transform scale-90 transition-all duration-300" id="modalCard1">
+            <button onclick="closeModal('noteModal', 'modalCard1')" class="absolute top-3 right-3 z-20 w-9 h-9 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center shadow-md">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="p-4 pt-10 bg-slate-900 flex flex-col items-center">
+                <h2 class="text-lg font-bold text-pink-400 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-video text-red-500 text-xl"></i> Birthday Special Song Video 🎵
+                </h2>
+                <div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-lg border border-slate-700 bg-black flex items-center justify-center">
+                    <!-- HTML5 Video Element (Auto Download ပြဿနာကို ဖြေရှင်းရန်) -->
+                    <video 
+                        id="videoPlayer"
+                        class="w-full h-full object-contain" 
+                        controls 
+                        playsinline>
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: PNG 2 (Flower For You) -->
+    <div id="gifModal2" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
+        <div class="relative w-full max-w-sm bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-6 text-center transform scale-90 transition-all duration-300 border border-pink-300" id="modalCard2">
+            <button onclick="closeModal('gifModal2', 'modalCard2')" class="absolute top-3 right-3 w-8 h-8 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h2 class="text-xl font-bold text-pink-600 mb-3">Virtual Birthday Cake For You 🎂🌸</h2>
+            <div class="w-full h-56 flex items-center justify-center overflow-hidden rounded-2xl">
+                <img src="https://media.tenor.com/1zmS4Zjz2MEAAAAi/transparent-birthday.gif" alt="Flower GIF" class="w-full h-full object-contain drop-shadow-lg">
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: PNG 3 (Photo Grid Scrapbook) -->
+    <div id="photoBoothModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
+        <div class="relative w-full max-w-sm rounded-3xl shadow-2xl p-5 transform scale-90 transition-all duration-300 border-4 border-pink-300 overflow-hidden" 
+             id="modalCard3"
+             style="background-color: #fff1f2; background-image: linear-gradient(to right, rgba(244, 63, 94, 0.15) 1px, transparent 1px), linear-gradient(to bottom, rgba(244, 63, 94, 0.15) 1px, transparent 1px); background-size: 24px 24px;">
+            
+            <button onclick="closeModal('photoBoothModal', 'modalCard3')" class="absolute top-3 right-3 w-8 h-8 bg-white/80 hover:bg-white text-pink-700 rounded-full flex items-center justify-center z-20 shadow-sm border border-pink-200">
+                <i class="fa-solid fa-xmark text-base"></i>
+            </button>
+
+            <div class="text-center font-bold text-pink-700 text-base mb-1 tracking-widest flex items-center justify-center gap-2 relative z-10">
+                <i class="fa-solid fa-camera text-pink-500"></i> Mini Photo Booth 📸
+            </div>
+            <p class="text-center text-[11px] text-pink-600/80 mb-3 font-medium">ပုံလေးတွေကို အကြီးချဲ့ကြည့်ရန် တစ်ပုံချင်းနှိပ်ပါ ✨</p>
+
+            <div class="relative w-full h-[380px] z-10">
+                <!-- Photo 1 -->
+                <div class="absolute top-0 left-0 w-[58%] h-24 p-1.5 bg-white/95 rounded-lg shadow-md border-2 border-sky-300 transform -rotate-2 hover:rotate-0 hover:scale-105 hover:z-20 transition-all cursor-pointer group" onclick="viewImage('https://i.ibb.co/SDBy3vqM/IMG-1272-2.jpg')">
+                    <img src="https://i.ibb.co/SDBy3vqM/IMG-1272-2.jpg" class="w-full h-full object-cover rounded">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-magnifying-glass-plus text-white opacity-0 group-hover:opacity-100 drop-shadow-md transition-opacity"></i>
+                    </div>
+                </div>
+                <!-- Photo 2 -->
+                <div class="absolute top-8 right-0 w-[38%] h-28 p-1.5 bg-white/95 rounded-lg shadow-md border-2 border-sky-300 transform rotate-3 hover:rotate-0 hover:scale-105 hover:z-20 transition-all cursor-pointer group" onclick="viewImage('https://i.ibb.co/twhVFsyK/IMG-1270.jpg')">
+                    <img src="https://i.ibb.co/twhVFsyK/IMG-1270.jpg" class="w-full h-full object-cover rounded">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-magnifying-glass-plus text-white opacity-0 group-hover:opacity-100 drop-shadow-md transition-opacity"></i>
+                    </div>
+                </div>
+                <!-- Photo 3 -->
+                <div class="absolute top-[110px] left-2 w-[52%] h-24 p-1.5 bg-white/95 rounded-lg shadow-md border-2 border-sky-300 transform rotate-1 hover:rotate-0 hover:scale-105 hover:z-20 transition-all cursor-pointer group" onclick="viewImage('https://i.ibb.co/rRrqyyn2/IMG-1193.jpg')">
+                    <img src="https://i.ibb.co/rRrqyyn2/IMG-1193.jpg" class="w-full h-full object-cover rounded">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-magnifying-glass-plus text-white opacity-0 group-hover:opacity-100 drop-shadow-md transition-opacity"></i>
+                    </div>
+                </div>
+                <!-- Photo 4 -->
+                <div class="absolute top-[145px] right-1 w-[40%] h-36 p-1.5 bg-white/95 rounded-lg shadow-md border-2 border-sky-300 transform -rotate-2 hover:rotate-0 hover:scale-105 hover:z-20 transition-all cursor-pointer group" onclick="viewImage('https://i.ibb.co/NgvmXfb1/IMG-1201.jpg')">
+                    <img src="https://i.ibb.co/NgvmXfb1/IMG-1201.jpg" class="w-full h-full object-cover rounded">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-magnifying-glass-plus text-white opacity-0 group-hover:opacity-100 drop-shadow-md transition-opacity"></i>
+                    </div>
+                </div>
+                <!-- Photo 5 -->
+                <div class="absolute bottom-2 left-0 w-[54%] h-24 p-1.5 bg-white/95 rounded-lg shadow-md border-2 border-sky-300 transform -rotate-3 hover:rotate-0 hover:scale-105 hover:z-20 transition-all cursor-pointer group" onclick="viewImage('https://i.ibb.co/WW2Qt65M/IMG-1312-2.jpg')">
+                    <img src="https://i.ibb.co/WW2Qt65M/IMG-1312-2.jpg" class="w-full h-full object-cover rounded">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-magnifying-glass-plus text-white opacity-0 group-hover:opacity-100 drop-shadow-md transition-opacity"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SINGLE IMAGE VIEWER MODAL (Lightbox) -->
+    <div id="imageViewerModal" onclick="closeImageViewer()" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-[60] hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
+        <div onclick="event.stopPropagation()" id="imageViewerCard" class="relative max-w-lg w-full bg-white p-2.5 rounded-2xl shadow-2xl border-4 border-pink-300 transform scale-90 transition-all duration-300 flex flex-col items-center">
+            <button onclick="closeImageViewer()" class="absolute -top-3.5 -right-3.5 w-9 h-9 bg-pink-500 hover:bg-pink-600 text-white rounded-full flex items-center justify-center shadow-lg border-2 border-white transition-transform hover:scale-110">
+                <i class="fa-solid fa-xmark text-base"></i>
+            </button>
+            <img id="fullSizeImage" src="" alt="Full Size Memory" class="w-full max-h-[75vh] object-contain rounded-xl bg-pink-50">
+        </div>
+    </div>
+
+    <!-- MODAL 4: PNG 4 (Note Style) -->
+    <div id="realisticNoteModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
+        <div class="relative w-full max-w-md rounded-2xl p-7 shadow-2xl transform scale-90 transition-all duration-300 border-4 border-pink-300 overflow-hidden" 
+             id="modalCard4"
+             style="background-color: #fdf2f8; background-image: linear-gradient(to right, rgba(244, 114, 182, 0.25) 1px, transparent 1px), linear-gradient(to bottom, rgba(244, 114, 182, 0.25) 1px, transparent 1px); background-size: 24px 24px;">
+            <button onclick="closeModal('realisticNoteModal', 'modalCard4')" class="absolute top-4 right-4 w-8 h-8 bg-white/80 hover:bg-white text-pink-600 rounded-full flex items-center justify-center z-10 shadow-sm border border-pink-200">
+                <i class="fa-solid fa-xmark text-base"></i>
+            </button>
+            <h3 class="text-lg font-bold text-pink-700 border-b-2 border-pink-300/60 pb-2 mb-4 flex items-center gap-2">
+                <span>Happy Birthday Par Naw Main Ma! 🎂🤍</span>
+            </h3>
+            <p class="text-pink-950/85 text-sm md:text-base leading-relaxed font-serif relative z-10 bg-white/60 p-4 rounded-xl border border-pink-200/50 backdrop-blur-[2px]">
+                "ကျရောက်တဲ့ မွေးနေ့မှသည် နောင်နှစ်ပေါင်းများစွာတိုင် စိတ်ချမ်းသာခြင်း ကိုယ်ကျန်းမာခြင်းတို့နဲ့ ပြည့်စုံပါစေ။ လိုရာဆန္ဒမှန်သမျလည်းအမြန်ဆုံးအကောင်ထည်ပေါပြီး ပျော်ရွှင်စရာကောင်းတဲ့ နေ့ရက်များကိုပိုင်ဆိုင်နိုင်ပါစေကြောင်းဆုမွန်ကောင်းတောင်းပေးလိုက်ပါတယ်"💗
+            </p>
+        </div>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="bgMusic" src="https://www.image2url.com/r2/default/audio/1789288232634-9a89e91e-e43f-4d68-b101-bf9b607f0f76.m4a" preload="auto"></audio>
+
+    <script>
+        const videoFileUrl = "https://www.image2url.com/r2/default/videos/1794901193021-41cc356c-e325-4786-8900-3607b76f9f90.mov";
+        const sparkles = ['🎂', '🎉', '🎁', '🎈', '✨', '💖', '👑', '🌷'];
+
+        const mainBouquet = document.getElementById('mainBouquet');
+        const instructionText = document.getElementById('instructionText');
+        const statusHeart = document.getElementById('statusHeart');
+        const statusText = document.getElementById('statusText');
+        const container = document.getElementById('container');
+        const glowBg = document.getElementById('glowBg');
+        const bgMusic = document.getElementById('bgMusic');
+        const videoPlayer = document.getElementById('videoPlayer');
+
+        let isOpen = false;
+
+        function getRadius() {
+            const width = window.innerWidth;
+            if (width < 640) return 140;
+            if (width < 1024) return 190;
+            return 230;
+        }
+
+        function updatePositions() {
+            const radius = getRadius();
+            const total = 5;
+            const angleOffset = -Math.PI / 2;
+
+            for (let i = 0; i < total; i++) {
+                const item = document.getElementById(`item-${i}`);
+                if (item) {
+                    const angle = angleOffset + (i * (2 * Math.PI / total));
+                    const targetX = Math.cos(angle) * radius;
+                    const targetY = Math.sin(angle) * radius;
+                    item.style.setProperty('--target-x', `${targetX}px`);
+                    item.style.setProperty('--target-y', `${targetY}px`);
+                }
+            }
+        }
+
+        function toggleBouquet(e) {
+            if (e) e.stopPropagation();
+            isOpen = !isOpen;
+
+            mainBouquet.classList.remove('click-pop');
+            void mainBouquet.offsetWidth;
+            mainBouquet.classList.add('click-pop');
+
+            const rect = mainBouquet.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            updatePositions();
+
+            for (let i = 0; i < 5; i++) {
+                const el = document.getElementById(`item-${i}`);
+                if (isOpen) {
+                    setTimeout(() => {
+                        el.classList.add('active');
+                        setTimeout(() => {
+                            if (isOpen) el.classList.add('floating');
+                        }, 600);
+                    }, i * 60);
+                } else {
+                    el.classList.remove('floating');
+                    el.classList.remove('active');
+                }
+            }
+
+            if (isOpen) {
+                glowBg.classList.add('bg-pink-400/60', 'scale-125');
+                instructionText.textContent = "✨ ပြန်သိမ်းရန် ပန်းစည်းလေးကို ပြန်နှိပ်ပါ! ✨";
+                statusHeart.classList.add('animate-bounce');
+                statusText.textContent = "Status: Birthday Celebration Bloomed! 🎂🎉";
+                playTone(523.25);
+                spawnSparklesAround(centerX, centerY, 14);
+            } else {
+                glowBg.classList.remove('bg-pink-400/60', 'scale-125');
+                instructionText.textContent = "👇 မွေးနေ့လက်ဆောင်ဖွင့်ရန် ပန်းစည်းလေးကို နှိပ်ပါ! 👇";
+                statusHeart.classList.remove('animate-bounce');
+                statusText.textContent = "Status: Wishing you a magical day! 🎉";
+            }
+        }
+
+        function handleItemClick(index, e) {
+            e.stopPropagation();
+            const target = e.currentTarget;
+            const rect = target.getBoundingClientRect();
+            spawnSparklesAround(rect.left + rect.width / 2, rect.top + rect.height / 2, 10);
+            playTone(880);
+
+            if (index === 0) {
+                videoPlayer.src = videoFileUrl;
+                videoPlayer.load();
+                openModal('noteModal', 'modalCard1');
+            } else if (index === 1) {
+                openModal('gifModal2', 'modalCard2');
+            } else if (index === 2) {
+                openModal('photoBoothModal', 'modalCard3');
+            } else if (index === 3) {
+                openModal('realisticNoteModal', 'modalCard4');
+            } else if (index === 4) {
+                const cdImg = document.getElementById('cdImageInner');
+                if (bgMusic.paused) {
+                    bgMusic.play().then(() => {
+                        statusText.textContent = "Status: Playing Birthday Music 🎵";
+                        if (cdImg) cdImg.classList.add('spinning-cd');
+                    }).catch(err => {
+                        console.log("Audio play error:", err);
+                        alert("သီချင်းဖွင့်ရန် ဘရောက်ဇာမှ ခွင့်ပြုချက်လိုအပ်နေပါသည်။");
+                    });
+                } else {
+                    bgMusic.pause();
+                    statusText.textContent = "Status: Music Paused 🎶";
+                    if (cdImg) cdImg.classList.remove('spinning-cd');
+                }
+            }
+        }
+
+        // Photo Booth Single Image Lightbox Functions
+        function viewImage(imgSrc) {
+            playTone(659.25);
+            const fullImg = document.getElementById('fullSizeImage');
+            fullImg.src = imgSrc;
+            openModal('imageViewerModal', 'imageViewerCard');
+        }
+
+        function closeImageViewer() {
+            closeModal('imageViewerModal', 'imageViewerCard');
+        }
+
+        bgMusic.addEventListener('ended', () => {
+            const cdImg = document.getElementById('cdImageInner');
+            if (cdImg) cdImg.classList.remove('spinning-cd');
+            statusText.textContent = "Status: Music Finished 🎶";
+        });
+
+        function openModal(modalId, cardId) {
+            const modal = document.getElementById(modalId);
+            const card = document.getElementById(cardId);
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                card.classList.remove('scale-90');
+                card.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal(modalId, cardId) {
+            const modal = document.getElementById(modalId);
+            const card = document.getElementById(cardId);
+            if (modalId === 'noteModal') {
+                videoPlayer.pause();
+                videoPlayer.src = "";
+            }
+            modal.classList.add('opacity-0');
+            card.classList.remove('scale-100');
+            card.classList.add('scale-90');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function playTone(freq = 523.25) {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.4);
+            } catch (e) {}
+        }
+
+        function spawnSparklesAround(x, y, count = 8) {
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle text-lg md:text-xl select-none';
+                particle.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                const dx = (Math.random() - 0.5) * 220;
+                const dy = (Math.random() - 0.5) * 220;
+                particle.style.setProperty('--dx', `${dx}px`);
+                particle.style.setProperty('--dy', `${dy}px`);
+                container.appendChild(particle);
+                setTimeout(() => {
+                    if (particle && particle.parentNode) particle.parentNode.removeChild(particle);
+                }, 1200);
+            }
+        }
+        window.addEventListener('resize', updatePositions);
+        window.addEventListener('load', updatePositions);
+    </script>
+</body>
+</html>
